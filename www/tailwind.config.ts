@@ -11,6 +11,11 @@ export default {
         xl: "1920px",
       },
     },
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-prompt)', 'Arial', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };
