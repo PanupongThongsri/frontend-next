@@ -31,3 +31,61 @@ body {
 .input-white input {
   color: white !important;
 }
+
+/* 1. ตั้งค่าพื้นฐาน: เมนูทุกตัวมีขีดล่างแบบใส (กันกระตุก) */
+.custom-nav-menu .ant-menu-item {
+  border-bottom: 3px solid transparent !important;
+  transition: all 0.3s ease;
+}
+
+/* 2. สถานะปกติ: ตัวที่ Active (Selected) ต้องมีขีดสีฟ้า */
+.custom-nav-menu .ant-menu-item-selected {
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border-bottom-color: #1677ff !important; /* สีของขีด Active ปกติ */
+}
+
+/* 3. สถานะ Hover ที่ตัว Item: เอาเมาส์ชี้ตัวไหน ตัวนั้นต้องมีขีด */
+.custom-nav-menu .ant-menu-item:hover {
+  color: #ffffff !important;
+  border-bottom-color: #1677ff !important;
+  background-color: transparent !important;
+}
+
+/* --- magic starts here --- */
+
+/* 4. เมื่อเมาส์เข้ามาในพื้นที่ 'กล่องเมนูรวม' (.custom-nav-menu:hover) 
+      ให้สั่งตัวที่ Active อยู่เดิม (.ant-menu-item-selected) ให้ขีดหายไปก่อน 
+      (เพราะเราจะให้ความสำคัญกับตัวที่ Hover แทน) */
+.custom-nav-menu:hover .ant-menu-item-selected {
+  border-bottom-color: transparent !important;
+}
+
+/* 5. ข้อยกเว้น: แต่ถ้าตัวที่ Hover ดันเป็นตัว Active อยู่แล้ว ก็ให้ขีดโชว์เหมือนเดิม */
+.custom-nav-menu:hover .ant-menu-item-selected:hover {
+  border-bottom-color: #1677ff !important;
+}
+
+/* ลบขีด Default ของ Ant Design ทิ้ง */
+.custom-nav-menu.ant-menu-dark .ant-menu-item::after {
+  display: none !important; 
+}
+
+@media (max-width: 768px) {
+  
+  /* Class ที่คุณระบุมา */
+  .ant-steps-item-header,
+  .ant-timeline-item-header {
+    display: none !important;
+  }
+
+  /* แถม: ปกติ Ant Design Timeline ส่วนที่เป็นวันที่ด้านซ้ายคือ class นี้ */
+  .ant-timeline-item-label {
+    display: none !important; 
+    width: 0 !important; /* ยุบความกว้างให้เหลือ 0 */
+  }
+
+  .ant-steps-item-icon.ant-wave-target.ant-timeline-item-icon{
+    display: none !important; 
+  }
+}

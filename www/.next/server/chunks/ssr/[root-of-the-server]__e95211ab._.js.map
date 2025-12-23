@@ -3,5 +3,5 @@
   "sources": [],
   "sections": [
     {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 15, "column": 0}, "map": {"version":3,"sources":["file:///Users/best/Documents/admin-frontend-next/www/app/page.tsx"],"sourcesContent":["import Image from \"next/image\";\nimport { redirect } from \"next/navigation\";\n\n\nexport default function Home() {\n\n  return (\n    <>\n    </>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAIe,SAAS;IAEtB,qBACE;AAGJ","debugId":null}}]
+    {"offset": {"line": 15, "column": 0}, "map": {"version":3,"sources":["file:///Users/best/Documents/admin-frontend-next/www/app/page.tsx"],"sourcesContent":["import Image from \"next/image\";\nimport { redirect } from \"next/navigation\";\n\n\nexport default function Home() {\n\n  return (\n    <>\n\n    </>\n  );\n}\n"],"names":[],"mappings":";;;;;;AAIe,SAAS;IAEtB,qBACE;AAIJ","debugId":null}}]
 }

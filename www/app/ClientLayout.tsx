@@ -13,7 +13,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {isNoContainer ? (
         <>{children}</>
       ) : (
-        <div className="container mx-auto p-4">{children}</div>
+        <div>{children}</div>
+        // className="container mx-auto p-4"
       )}
     </main>
   );

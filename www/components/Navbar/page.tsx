@@ -1,43 +1,91 @@
 "use client";
-
 import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import type { MenuProps } from 'antd';
 import { Button, Menu } from "antd";
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [activeSection, setActiveSection] = useState<string>("home");
 
-  // กำหนดรายการเมนูตามที่ต้องการ และ map กับ URL ที่จะไป
+  // 1. แก้ไข Key ให้ตรงกับ ID ในหน้า page.tsx (เอา / ออก)
   const items: MenuProps["items"] = [
     {
-      key: "/about",
-      label: "เกี่ยวกับ",
+      key: "home",
+      label: "Home",
     },
     {
-      key: "/history",
-      label: "ประวัติ",
+      key: "about",
+      label: "About",
     },
     {
-      key: "/experience",
-      label: "ประสบการณ์",
+      key: "history",
+      label: "History",
     },
     {
-      key: "/skills",
-      label: "เทคโนโลยีที่ใช้",
+      key: "experience",
+      label: "Experience & Skills",
     },
+    // {
+    //   key: "skills",
+    //   label: "Skills",
+    // },
     {
-      key: "/news",
-      label: "ข่าวสาร",
+      key: "news",
+      label: "News",
     }
   ];
 
-  // Logic เมื่อคลิกเมนู ให้ redirect ไปตาม key ที่ตั้งไว้
+  useEffect(() => {
+    const handleScroll = () => {
+      // ดึง section ทั้งหมดตาม items ที่เราตั้งไว้
+      const sections = items.map(item => document.getElementById(item?.key as string));
+      
+      // หาตำแหน่ง scroll ปัจจุบัน (+ offset นิดหน่อยเพื่อให้ active ก่อนจะถึงหัวข้อเป๊ะๆ)
+      const scrollPosition = window.scrollY + 100; 
+
+      let current = "home"; // ค่า default
+
+      sections.forEach((section) => {
+        if (section) {
+          // ถ้า scroll เกินขอบบนของ section นั้นๆ ให้ถือว่า active section นั้น
+          if (section.offsetTop <= scrollPosition) {
+            current = section.id;
+          }
+        }
+      });
+
+      setActiveSection(current);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [items]); // dependencies
+
+  // Logic คลิกเมนู
   const handleMenuClick: MenuProps['onClick'] = (e) => {
-    router.push(e.key);
+    const targetId = e.key;
+    const element = document.getElementById(targetId);
+
+    if (element) {
+      // ✅ เพิ่มการปรับ offset เวลายิงไปหา section (ลบความสูง navbar ออก)
+      const headerOffset = 80; 
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+      
+      // update state ทันทีเพื่อให้ UI เปลี่ยนไวขึ้น (ไม่ต้องรอ scroll event)
+      setActiveSection(targetId);
+    } else {
+      router.push(`/#${targetId}`);
+    }
   };
 
-  // ถ้าอยู่หน้า login หรือ register → ไม่แสดง Navbar
   if (pathname === "/login" || pathname === "/register") return null;
 
   const handleLogout = () => {
@@ -47,13 +95,15 @@ export default function Navbar() {
 
   return (
     <nav
-      className="px-8"
+      className="px-8 fixed w-full z-50 shadow-md" // ✅ เพิ่ม fixed เพื่อให้เมนูตามลงมาด้วยตอนเลื่อน
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         background: "#001529",
         height: "64px",
+        top: 0, 
+        left: 0
       }}
     >
       <div 
@@ -64,9 +114,13 @@ export default function Navbar() {
           marginRight: "30px",
           cursor: "pointer" 
         }}
-        onClick={() => router.push("/")}
+        onClick={() => {
+            // กดโลโก้ ให้เลื่อนไปบนสุด
+            const home = document.getElementById('home');
+            if(home) home.scrollIntoView({ behavior: 'smooth' });
+            else router.push('/');
+        }}
       >
-        {/* MY PORTFOLIO */}
         II
       </div>
 
@@ -74,9 +128,10 @@ export default function Navbar() {
         <Menu
           theme="dark"
           mode="horizontal"
-          selectedKeys={[pathname]}
+          selectedKeys={[activeSection]}
           items={items}
           onClick={handleMenuClick}
+          className="custom-nav-menu"
           style={{ 
             background: "transparent", 
             borderBottom: "none",
